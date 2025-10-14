@@ -1,16 +1,16 @@
 """
-ASGI config for tienda project.
+Archivo ASGI del proyecto.
 
-It exposes the ASGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
+ASGI = Asynchronous Server Gateway Interface.
+Permite que Django trabaje con conexiones asíncronas
+(WebSockets, HTTP/2, chat en tiempo real, etc.)
 """
 
 import os
-
 from django.core.asgi import get_asgi_application
 
+# Define qué archivo de configuración (settings.py) se usará
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tienda.settings')
 
+# Crea la aplicación ASGI para que el servidor web se comunique con Django
 application = get_asgi_application()
