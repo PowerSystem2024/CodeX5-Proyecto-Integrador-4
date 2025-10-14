@@ -1,0 +1,36 @@
+# Entorno virtual
+env/
+venv/
+ENV/
+.venv/
+
+# Archivos de base de datos
+
+
+# Archivos de migraciones compilados
+**/__pycache__/
+**/*.pyc
+
+# Archivos de configuración de VSCode
+.vscode/
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos de configuración de Python
+*.pyo
+*.pyd
+
+# Archivos de credenciales o variables de entorno
+.env
+
+# Carpeta de pedidos con PDFs generados (no subir al repositorio)
+static/media/pedidos/
+
+# Base de datos SQLite local
+*.sqlite3
+db.sqlite3
