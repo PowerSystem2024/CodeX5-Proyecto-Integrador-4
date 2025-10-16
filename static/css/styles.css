@@ -1,0 +1,896 @@
+/* ======================================================
+   FUENTES Y ESTILOS GLOBALES
+   ====================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    color: #002035;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #002035;
+}
+
+a {
+    color: #00affe;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #008fcc;
+}
+
+/* ======================================================
+   ANIMACIONES GENERALES
+   ====================================================== */
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+    60% { transform: translateY(-4px); }
+}
+
+@keyframes logoDrop {
+    0% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%, -50%) translateY(20px) scale(1); opacity: 1; }
+}
+
+/* ======================================================
+   NAVBAR
+   ====================================================== */
+.navbar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #008fcc;
+    padding: 1.2rem 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.navbar-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateY(20px);
+    height: 150px;
+    width: auto;
+    z-index: 10;
+    animation: logoDrop 0.6s ease-out forwards;
+}
+
+.navbar-left,
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    z-index: 20;
+}
+
+.navbar-left .nav-link {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.navbar-left .nav-link:hover {
+    color: #00affe;
+    animation: bounce 0.5s;
+}
+
+.navbar-right .icon-link i {
+    font-size: 1.4rem;
+    color: #ffffff;
+    transition: transform 0.3s, color 0.3s;
+}
+
+.navbar-right .icon-link:hover i {
+    color: #00affe;
+    animation: bounce 0.5s;
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .navbar-links {
+        width: 100%;
+        justify-content: space-around;
+    }
+}
+
+/* ======================================================
+   LOGIN
+   ====================================================== */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: #f5f7fa;
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.login-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
+
+.login-form input {
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #0077cc;
+    box-shadow: 0 0 6px rgba(0,119,204,0.3);
+}
+
+.btn-login {
+    background: #0077cc;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.7rem 0.8rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-login:hover {
+    background: #005fa3;
+    transform: scale(1.05);
+}
+
+.login-footer {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    text-align: center;
+}
+
+.login-footer a {
+    color: #0077cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .login-card { padding: 2rem; }
+    .login-title { font-size: 1.6rem; }
+    .btn-login { font-size: 0.95rem; padding: 0.6rem 0.8rem; }
+}
+
+/* ======================================================
+   REGISTER
+   ====================================================== */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: #f5f7fa;
+    padding: 1rem;
+}
+
+.register-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.register-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+.register-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 1.5rem;
+}
+
+.register-form .form-group.full-width {
+    grid-column: 1 / span 2;
+}
+
+.register-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form input {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.register-form input:focus {
+    border-color: #0077cc;
+    box-shadow: 0 0 6px rgba(0,119,204,0.3);
+    outline: none;
+}
+
+.form-error {
+    color: #ff4d4f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.btn-register {
+    grid-column: 1 / span 2;
+    margin: 1rem auto 0 auto;
+    background: #0077cc;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: fit-content;
+    text-align: center;
+}
+
+.btn-register:hover {
+    background: #005fa3;
+    transform: scale(1.05);
+}
+
+.register-footer {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    text-align: center;
+}
+
+.register-footer a {
+    color: #0077cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+.register-form .form-grid .form-group:nth-child(1) { grid-column: 1; }
+.register-form .form-grid .form-group:nth-child(2) { grid-column: 2; }
+.register-form .form-grid .form-group:nth-child(3) { grid-column: 1 / span 2; }
+.register-form .form-grid .form-group:nth-child(4) { grid-column: 1; }
+.register-form .form-grid .form-group:nth-child(5) { grid-column: 2; }
+.register-form .form-grid .form-group:nth-child(6) { grid-column: 1; }
+.register-form .form-grid .form-group:nth-child(7) { grid-column: 2; }
+
+@media (max-width: 768px) {
+    .register-form .form-grid { grid-template-columns: 1fr; }
+    .btn-register { width: 100%; text-align: center; }
+}
+
+/* ======================================================
+   MI CUENTA
+   ====================================================== */
+.mi-cuenta-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    background: #f5f7fa;
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+}
+
+.mi-cuenta-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.mi-cuenta-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.mi-cuenta-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-cuenta {
+    display: block;
+    background: #0ea5e9;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-cuenta:hover {
+    background: #10638a;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .mi-cuenta-card { padding: 2rem; }
+    .mi-cuenta-title { font-size: 1.6rem; }
+    .btn-cuenta { font-size: 0.95rem; padding: 0.7rem 1rem; }
+}
+
+/* ======================================================
+   HISTORIAL DE COMPRAS
+   ====================================================== */
+.historial-compras-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+    background: #f5f7fa;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s 0.1s forwards;
+}
+
+.historial-compras-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.historial-compras-table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.historial-compras-table th,
+.historial-compras-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.historial-compras-table th {
+    background-color: #002035;
+    color: #fff;
+    font-weight: 600;
+}
+
+.historial-compras-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+.historial-compras-table ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.historial-compras-table li {
+    margin: 0.2rem 0;
+}
+
+.historial-compras-container .btn {
+    background-color: #0ea5e9;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.historial-compras-container .btn:hover {
+    background-color: #10638a;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .historial-compras-table th,
+    .historial-compras-table td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* ======================================================
+   PAGO / CHECKOUT
+   ====================================================== */
+.pago-card {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.pago-card h1 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #111;
+}
+
+.pago-card p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+#confirmar-pago-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    background-color: #22c55e;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#confirmar-pago-btn:hover {
+    background-color: #16a34a;
+    transform: scale(1.05);
+}
+
+#mensaje {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111;
+}
+
+#link-pdf {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#link-pdf:hover {
+    background-color: #e0f2fe;
+    transform: scale(1.05);
+}
+
+.volver-tienda {
+    display: block;
+    margin: 2rem auto 3rem auto;
+    color: #0ea5e9;
+    font-weight: 600;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: center;
+    max-width: 140px;
+    cursor: pointer;
+}
+
+.volver-tienda:hover {
+    color: #10638a;
+}
+
+@media (max-width: 600px) {
+    .pago-card {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
+
+    #confirmar-pago-btn,
+    #link-pdf,
+    .volver-tienda {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ======================================================
+   LISTA / CATÁLOGO DE PRODUCTOS
+   ====================================================== */
+.lista-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 2rem 3rem;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(0, 32, 53, 0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filtros input,
+.filtros select {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.7rem 1rem;
+    border: 1px solid rgba(0, 32, 53, 0.2);
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filtros input:focus,
+.filtros select:focus {
+    border-color: #00affe;
+    box-shadow: 0 0 8px rgba(0, 175, 254, 0.3);
+}
+
+.filtros button {
+    background-color: #0ea5e9;
+    color: #fff;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.filtros button:hover {
+    background-color: #10638a;
+    animation: bounce 0.5s;
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+    animation-delay: 0.2s;
+    grid-auto-rows: 1fr;
+}
+
+@media (max-width: 992px) {
+    .productos-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .productos-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+}
+
+/* ======================================================
+   CARD DE PRODUCTO
+   ====================================================== */
+.producto-card,
+.similar-card {
+    background: #ffffff;
+    border-radius: 18px;
+    overflow: hidden;
+    padding: 1.5rem;
+    text-align: left;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 450px;
+    position: relative;
+}
+
+.producto-card:hover,
+.similar-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 175, 254, 0.25);
+}
+
+.producto-card img,
+.similar-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: contain;
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+}
+
+.producto-card h3,
+.similar-card h3 {
+    font-size: 1.2rem;
+    color: #002035;
+    margin-bottom: 5rem;
+    min-height: 2rem;
+}
+
+.producto-card h3 a,
+.similar-card h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.producto-card h3 a:hover,
+.similar-card h3 a:hover {
+    color: #00affe;
+}
+
+.precio-carrito {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.precios {
+    display: flex;
+    flex-direction: column;
+}
+
+.precio-original {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+
+.precio-descuento {
+    color: #00affe;
+    font-weight: bold;
+    font-size: 1.6rem;
+}
+
+.btn-carrito {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0ea5e9;
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin-top: auto;
+}
+
+.btn-carrito:hover {
+    background-color: #10638a;
+    transform: translateY(-2px);
+    animation: bounce 0.5s;
+}
+
+.btn-carrito.disabled,
+.btn-carrito[disabled] {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    color: #666666;
+}
+
+.badge-ahorro {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #2ecc71;
+    color: #fff;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.badge.bg-danger {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+
+.stock-bajo {
+    display: block;
+    margin-bottom: 1rem;
+    color: #d97706;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    background-color: #fff7ed;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.sin-stock {
+    display: block;
+    margin-bottom: 1rem;
+    color: #666666;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    background-color: #cccccc;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ======================================================
+   FOOTER
+   ====================================================== */
+.footer-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #008fcc;
+    padding: 1rem 2rem;
+    color: #fff;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.footer-left .footer-logo img {
+    height: 100px;
+    width: auto;
+}
+
+.footer-center {
+    flex: 1 1 500px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.footer-center p {
+    margin: 0;
+    line-height: 1.4rem;
+}
+
+.footer-right .btn-github {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #333;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-right .btn-github i {
+    font-size: 1.2rem;
+}
+
+.footer-right .btn-github:hover {
+    background-color: #555;
+    transform: translateY(-2px);
+    animation: bounce 0.5s;
+}
+
+@media (max-width: 992px) {
+    .footer-navbar {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-center { order: 2; }
+    .footer-right { order: 3; }
+}
+
+/* Layout general para footer pegado abajo */
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1; padding: 2rem; }
