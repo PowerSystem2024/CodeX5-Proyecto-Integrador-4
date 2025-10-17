@@ -1,0 +1,174 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+<!-- CSS específico para detalle de producto -->
+<link rel="stylesheet" href="{% static 'css/detalle_producto.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= DETALLE DEL PRODUCTO ================= -->
+<div class="detalle-producto container">
+    <div class="producto-row">
+
+        <!-- Galería de imágenes -->
+        <div class="galeria">
+            <img id="imagen-principal" class="imagen-principal" 
+                 src="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}" 
+                 alt="{{ producto.nombre }}">
+
+            <div class="miniaturas">
+                {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="Principal" class="miniatura active" onclick="cambiarImagen(this)">
+                {% endif %}
+                {% for img in producto.imagenes.all %}
+                <img src="{{ img.imagen.url }}" alt="Extra" class="miniatura" onclick="cambiarImagen(this)">
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Información principal -->
+        <div class="info-producto">
+            <h1>{{ producto.nombre }}</h1>
+
+            <!-- Precio y descuento -->
+            <div class="precio-section">
+                {% if producto.descuento > 0 %}
+                <span class="precio-original">${{ producto.precio }}</span>
+                <span class="precio-descuento">${{ producto.precio_con_descuento|floatformat:2 }}</span>
+                <span class="badge-descuento">-{{ producto.descuento }}%</span>
+                {% else %}
+                <span class="precio-descuento">${{ producto.precio }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Beneficios / stock / garantía / envío -->
+            <div class="beneficios-section">
+
+                {% if producto.descuento > 0 %}
+                <div class="beneficio-item">
+                    <!-- Icono ahorro -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2L15 8H9L12 2ZM12 22C6.48 22 2 17.52 2 12S6.48 2 12 2 22 6.48 22 12 17.52 22 12 22Z"/>
+                    </svg>
+                    <span class="beneficio-texto">Ahorrás ${{ producto.ahorro|floatformat:0 }}</span>
+                </div>
+                {% endif %}
+
+                <div class="beneficio-item">
+                    <!-- Icono garantía -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 1L3 5v6c0 5.25 3.67 10.74 9 12 5.33-1.26 9-6.75 9-12V5l-9-4zm0 14a4 4 0 110-8 4 4 0 010 8z"/>
+                    </svg>
+                    <span class="beneficio-texto">Garantía 12 meses</span>
+                </div>
+
+                <div class="beneficio-item">
+                    <!-- Icono envío -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M3 3h18v2H3V3zm0 16h18v2H3v-2zm0-8h12v2H3v-2z"/>
+                    </svg>
+                    <span class="beneficio-texto">Envío a todo el país</span>
+                </div>
+
+                <div class="beneficio-item">
+                    <!-- Icono stock -->
+                    {% if producto.stock == 0 %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7A1 1 0 0 0 5.7 7.11L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"/>
+                    </svg>
+                    <span class="beneficio-texto text-danger">Sin Stock</span>
+                    {% elif producto.stock < 10 %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 14h-2v-2h2v2zm0-4h-2V6h2v6z"/>
+                    </svg>
+                    <span class="beneficio-texto text-warning">Quedan solo {{ producto.stock }} unidades</span>
+                    {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icono-beneficio" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    <span class="beneficio-texto text-stock">Stock disponible</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Botón agregar al carrito -->
+            <a class="btn-agregar {% if producto.stock == 0 %}disabled{% endif %}" 
+               href="{% if producto.stock > 0 %}{% url 'agregar_al_carrito' producto.id %}{% else %}#{% endif %}">
+                Agregar al carrito
+            </a>
+        </div>
+    </div>
+
+    <!-- Descripción -->
+    <div class="descripcion">
+        <p>{{ producto.descripcion }}</p>
+    </div>
+</div>
+
+<!-- ================= PRODUCTOS SIMILARES ================= -->
+<div class="similares-container">
+    <h2 class="similares-title">Productos Similares</h2>
+    
+    <div class="similares-slider-wrapper">
+        <button class="slider-arrow prev" onclick="slideSimilares(-1)">&#8249;</button>
+        <div class="similares-slider" id="similares-slider">
+            {% for prod in productos_similares %}
+            <div class="similar-card">
+                <a href="{% url 'detalle_producto' prod.id %}" class="similar-link">
+                    <img src="{% if prod.imagen %}{{ prod.imagen.url }}{% endif %}" alt="{{ prod.nombre }}">
+                    <h3>{{ prod.nombre }}</h3>
+                </a>
+                <div class="precio-carrito">
+                    {% if prod.descuento > 0 %}
+                    <span class="precio-original">${{ prod.precio }}</span>
+                    <span class="precio-descuento">${{ prod.precio_con_descuento|floatformat:2 }}</span>
+                    {% else %}
+                    <span class="precio-descuento">${{ prod.precio }}</span>
+                    {% endif %}
+                    <a class="btn-carrito {% if prod.stock == 0 %}disabled{% endif %}" href="{% if prod.stock > 0 %}{% url 'agregar_al_carrito' prod.id %}{% else %}#{% endif %}">
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="slider-arrow next" onclick="slideSimilares(1)">&#8250;</button>
+    </div>
+</div>
+
+<!-- ================= SCRIPT GALERÍA Y SLIDER ================= -->
+<script>
+function cambiarImagen(elemento) {
+    const imagenPrincipal = document.getElementById("imagen-principal");
+    imagenPrincipal.src = elemento.src;
+    document.querySelectorAll(".miniaturas img").forEach(img => img.classList.remove("active"));
+    elemento.classList.add("active");
+}
+
+let slider = document.getElementById('similares-slider');
+let slideIndex = 0;
+
+function slideSimilares(direction) {
+    const cardWidth = slider.querySelector('.similar-card').offsetWidth + 24; // incluye gap
+    const totalCards = slider.children.length;
+    const visibleCards = 4; // cantidad visible
+
+    slideIndex += direction;
+
+    if (slideIndex < 0) {
+        slideIndex = totalCards - visibleCards;
+    }
+    if (slideIndex > totalCards - visibleCards) {
+        slideIndex = 0;
+    }
+
+    slider.scrollTo({
+        left: cardWidth * slideIndex,
+        behavior: 'smooth'
+    });
+}
+</script>
+
+{% endblock %}
