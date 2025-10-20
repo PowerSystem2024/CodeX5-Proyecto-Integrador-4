@@ -1,0 +1,176 @@
+/* ============================ */
+/*       CONTENEDOR PRINCIPAL   */
+/* ============================ */
+.contenido-carrito {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards; /* Animación de entrada */
+}
+
+/* Animación de fade in y subida */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================ */
+/*          TABLA DEL CARRITO   */
+/* ============================ */
+.carrito-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+/* Estilos de celdas y encabezados */
+.carrito-tabla th,
+.carrito-tabla td {
+    padding: 0.75rem 1rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 1rem;
+    transition: background-color 0.2s, transform 0.2s; /* efecto hover */
+}
+
+/* Encabezados de la tabla */
+.carrito-tabla th {
+    font-weight: 600;
+    background-color: #f8fafc;
+    color: #111;
+}
+
+/* Efecto hover sobre filas */
+.carrito-tabla tbody tr:hover {
+    background-color: #f0f2f5;
+    transform: scale(1.02);
+}
+
+/* ============================ */
+/*        BOTONES DE ACCIÓN     */
+/* ============================ */
+.btn-carrito {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    margin: 0 2px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+/* Hover general para todos los botones */
+.btn-carrito:hover {
+    transform: scale(1.05);
+}
+
+/* Botón sumar */
+.btn-carrito.sumar {
+    background-color: #0ea5e9;
+}
+.btn-carrito.sumar:hover {
+    background-color: #10638a;
+}
+
+/* Botón restar y eliminar */
+.btn-carrito.restar,
+.btn-carrito.eliminar {
+    background-color: #dc2626;
+}
+.btn-carrito.restar:hover,
+.btn-carrito.eliminar:hover {
+    background-color: #b91c1c;
+}
+
+/* ============================ */
+/*      TOTAL Y BOTONES FINALES */
+/* ============================ */
+.total-botones-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 1.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s 0.2s forwards; /* animación con retraso */
+}
+
+/* Texto del total */
+.total-botones-container p {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* Contenedor de botones */
+.botones-carrito {
+    display: flex;
+    gap: 1rem;
+}
+
+.botones-carrito a {
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    background-color: #0ea5e9;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.botones-carrito a:hover {
+    background-color: #10638a;
+    transform: scale(1.05);
+}
+
+/* ============================ */
+/*        MENSAJES DE STOCK     */
+/* ============================ */
+.sin-stock {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.stock-bajo {
+    color: #d97706;
+    font-weight: 500;
+}
+
+
+/* ============================ */
+/*          RESPONSIVE          */
+/* ============================ */
+@media (max-width: 768px) {
+    .contenido-carrito {
+        padding: 1rem;
+        margin: 1rem;
+    }
+
+    .carrito-tabla th,
+    .carrito-tabla td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+
+    .botones-carrito {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .total-botones-container p {
+        font-size: 1.2rem;
+    }
+}
