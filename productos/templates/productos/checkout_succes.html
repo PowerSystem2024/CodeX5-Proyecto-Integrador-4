@@ -1,0 +1,31 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<div class="checkout-success">
+
+    <!-- ======================================================
+         ALERTA DE ÉXITO
+         Muestra un mensaje visual cuando el pago fue aprobado
+         Incluye icono de check y texto de confirmación
+    ====================================================== -->
+    <div class="alert alert-success">
+        <h1>✅ Pago exitoso</h1>
+        <p>¡Gracias por tu compra! Tu pedido fue procesado correctamente.</p>
+    </div>
+
+    <!-- ======================================================
+         ACCIONES DEL USUARIO
+         Botones que permiten seguir comprando o descargar la factura
+         Se agrega condición para mostrar el link de PDF solo si existe
+    ====================================================== -->
+    <div class="checkout-actions">
+        <a href="{% url 'lista_productos' %}" class="btn">Seguir comprando</a>
+
+        {% if pdf_url %}
+            <!-- Botón para descargar la factura en PDF -->
+            <a href="{{ pdf_url }}" target="_blank" class="btn">Descargar factura (PDF)</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

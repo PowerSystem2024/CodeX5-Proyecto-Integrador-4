@@ -1,0 +1,69 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/pago_aprobado.css' %}">
+
+<div class="pago-card">
+    <h1>Pago Aprobado</h1>
+
+    <p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
+
+    <!-- Botón para generar el pedido -->
+    <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
+
+    <!-- Link al PDF, oculto hasta que el pedido se genere -->
+    <a id="link-pdf" href="#" target="_blank" style="display:none; margin-top:0.5rem; font-weight:bold; color:#1d4ed8;">
+        📄 Descargar PDF del pedido
+    </a>
+</div>
+
+<a class="volver-tienda" href="{% url 'lista_productos' %}">Volver a la tienda</a>
+
+<script>
+// Obtener CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            if (cookie.trim().startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.trim().substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+const btn = document.getElementById('confirmar-pago-btn');
+const linkPDF = document.getElementById('link-pdf');
+
+btn.addEventListener('click', async function() {
+    btn.disabled = true;  // Evitar múltiples clics
+
+    try {
+        const response = await fetch("{% url 'pago_aprobado' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok' && data.pdf_url) {
+            // Pedido generado: mostrar PDF y ocultar botón
+            linkPDF.href = data.pdf_url;
+            linkPDF.style.display = 'inline-block';
+            btn.style.display = 'none';
+        } else {
+            btn.disabled = false; // Reactivar botón si hay error
+        }
+    } catch (err) {
+        console.error("Error en fetch:", err);
+        btn.disabled = false;
+    }
+});
+</script>
+{% endblock %}
