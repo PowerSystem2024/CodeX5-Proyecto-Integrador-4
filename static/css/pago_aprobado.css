@@ -1,0 +1,132 @@
+/* ============================ */
+/*     CONTENEDOR PRINCIPAL      */
+/* ============================ */
+.pago-card {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+/* ============================ */
+/*      ANIMACIÓN GENERAL        */
+/* ============================ */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================ */
+/*            TÍTULO             */
+/* ============================ */
+.pago-card h1 {
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    color: #111;
+}
+
+/* ============================ */
+/*       TEXTO DESCRIPTIVO       */
+/* ============================ */
+.pago-card p {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+/* ============================ */
+/*    BOTÓN CONFIRMAR PAGO       */
+/* ============================ */
+#confirmar-pago-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 10px;
+    background-color: #22c55e;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#confirmar-pago-btn:hover {
+    background-color: #16a34a;
+    transform: scale(1.05);
+}
+
+/* ============================ */
+/*        MENSAJE DE ESTADO      */
+/* ============================ */
+#mensaje {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111;
+}
+
+/* ============================ */
+/*           LINK PDF            */
+/* ============================ */
+#link-pdf {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    color: #0ea5e9;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#link-pdf:hover {
+    background-color: #e0f2fe;
+    transform: scale(1.05);
+}
+
+/* ============================ */
+/*  LINK VOLVER A LA TIENDA      */
+/* ============================ */
+.volver-tienda {
+    display: block;
+    margin: 2rem auto 3rem auto;
+    color: #0ea5e9;
+    font-weight: 600;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: center;
+    max-width: 140px;
+    cursor: pointer;
+}
+
+.volver-tienda:hover {
+    color: #10638a;
+}
+
+/* ============================ */
+/*           RESPONSIVE          */
+/* ============================ */
+@media (max-width: 600px) {
+    .pago-card {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+    }
+
+    #confirmar-pago-btn,
+    #link-pdf,
+    .volver-tienda {
+        width: 100%;
+        text-align: center;
+    }
+}
