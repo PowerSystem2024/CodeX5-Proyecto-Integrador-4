@@ -3,6 +3,7 @@
 # ======================================================
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+
 from .models import Usuario
 
 
@@ -18,15 +19,23 @@ class RegistroForm(UserCreationForm):
 
     class Meta:
         model = Usuario
-        fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'password1', 'password2']
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "telefono",
+            "password1",
+            "password2",
+        ]
 
     def save(self, commit=True):
         """Guarda los datos del formulario asignando correctamente los campos adicionales."""
         user = super().save(commit=False)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.email = self.cleaned_data['email']
-        user.telefono = self.cleaned_data['telefono']
+        user.first_name = self.cleaned_data["first_name"]
+        user.last_name = self.cleaned_data["last_name"]
+        user.email = self.cleaned_data["email"]
+        user.telefono = self.cleaned_data["telefono"]
         if commit:
             user.save()
         return user
@@ -43,8 +52,15 @@ class UsuarioCreationForm(UserCreationForm):
 
     class Meta:
         model = Usuario
-        fields = ("username", "first_name", "last_name", "email", "telefono", "password1", "password2")
-
+        fields = (
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "telefono",
+            "password1",
+            "password2",
+        )
 
 
 # ======================================================
@@ -52,8 +68,9 @@ class UsuarioCreationForm(UserCreationForm):
 # ======================================================
 from django.contrib.auth.forms import AuthenticationForm
 
+
 class CustomAuthenticationForm(AuthenticationForm):
     error_messages = {
-        'invalid_login': "Usuario o contraseña incorrecta. Verificá tus datos e intentá de nuevo.",
-        'inactive': "Esta cuenta está inactiva.",
+        "invalid_login": "Usuario o contraseña incorrecta. Verificá tus datos e intentá de nuevo.",
+        "inactive": "Esta cuenta está inactiva.",
     }
