@@ -1,0 +1,58 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+    <!-- CSS específico para el historial de compras -->
+    <link rel="stylesheet" href="{% static 'css/historial_compras.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="historial-compras-container">
+
+    <!-- ================= TÍTULO ================= -->
+    <h2>Historial de Compras</h2>
+
+    <!-- ================= TABLA DE PEDIDOS ================= -->
+    {% if pedidos %}
+        <!-- Si hay pedidos, se muestra la tabla -->
+        <table class="historial-compras-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pedido in pedidos %}
+                <tr>
+                    <!-- Fecha del pedido formateada -->
+                    <td>{{ pedido.fecha|date:"d/m/Y" }}</td>
+
+                    <!-- Lista de productos del pedido -->
+                    <td>
+                        <ul>
+                        {% for item in pedido.pedidoproducto_set.all %}
+                            <li>{{ item.producto.nombre }} (x{{ item.cantidad }}) - ${{ item.producto.precio }} c/u</li>
+                        {% endfor %}
+                        </ul>
+                    </td>
+
+                    <!-- Total del pedido -->
+                    <td>${{ pedido.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- FEEDBACK: se muestra la información completa de compras al usuario -->
+    {% else %}
+        <!-- ================= MENSAJE SI NO HAY PEDIDOS ================= -->
+        <p>No hay compras registradas.</p>
+        <!-- FEEDBACK: informa al usuario que aún no tiene historial -->
+    {% endif %}
+
+    <!-- ================= BOTÓN VOLVER ================= -->
+    <a class="btn" href="{% url 'mi_cuenta' %}">Volver a Mi Cuenta</a>
+</div>
+{% endblock %}

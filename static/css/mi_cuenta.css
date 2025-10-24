@@ -1,0 +1,166 @@
+/* ================= CONTENEDOR PRINCIPAL ================= */
+.mi-cuenta-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 70vh;
+    background: #f5f7fa;
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+}
+
+/* ================= ANIMACIÓN GENERAL ================= */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= TARJETA MI CUENTA ================= */
+.mi-cuenta-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* ================= TÍTULO ================= */
+.mi-cuenta-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+/* ================= BOTONES ================= */
+.mi-cuenta-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-cuenta {
+    display: block;
+    background: #0ea5e9;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn-cuenta:hover {
+    background: #10638a;
+    transform: translateY(-2px);
+}
+
+/* ================= HISTORIAL DE COMPRAS ================= */
+.historial-compras-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 80vh;
+    padding: 2rem;
+    background: #f5f7fa;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s 0.1s forwards;
+}
+
+/* Título historial */
+.historial-compras-container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Tabla historial */
+.historial-compras-table {
+    width: 100%;
+    max-width: 900px;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.historial-compras-table th,
+.historial-compras-table td {
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.historial-compras-table th {
+    background-color: #002035;
+    color: #fff;
+    font-weight: 600;
+}
+
+.historial-compras-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Lista de productos dentro de la tabla */
+.historial-compras-table ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.historial-compras-table li {
+    margin: 0.2rem 0;
+}
+
+/* Botón historial */
+.historial-compras-container .btn {
+    background-color: #0ea5e9;
+    color: #fff;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    cursor: pointer;
+}
+
+.historial-compras-container .btn:hover {
+    background-color: #10638a;
+    transform: translateY(-2px);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .historial-compras-table th,
+    .historial-compras-table td {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+    }
+
+    .mi-cuenta-card {
+        padding: 2rem;
+    }
+
+    .mi-cuenta-title {
+        font-size: 1.6rem;
+    }
+
+    .btn-cuenta {
+        font-size: 0.95rem;
+        padding: 0.7rem 1rem;
+    }
+}

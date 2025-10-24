@@ -1,0 +1,29 @@
+{% extends 'productos/base.html' %}
+{% load static %}  {# Cargar archivos estáticos como CSS o imágenes #}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/mi_cuenta.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="mi-cuenta-container">
+    <div class="mi-cuenta-card">
+        <h2 class="mi-cuenta-title">Mi Cuenta</h2>
+
+        <!-- Mostrar mensajes al usuario (éxito, error, información) -->
+        {% if messages %}
+            <div class="mi-cuenta-messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Botones de acceso a funcionalidades de la cuenta -->
+        <div class="mi-cuenta-botones">
+            <a class="btn-cuenta" href="{% url 'ver_datos_usuario' %}">Ver mis datos</a>
+            <a class="btn-cuenta" href="{% url 'historial_compras' %}">Ver historial de compras</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
