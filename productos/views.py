@@ -1,24 +1,51 @@
 # ======================================================
 # Imports necesarios para vistas y utilidades de Django
 # ======================================================
-from django.shortcuts import render, get_object_or_404, redirect
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.admin.models import LogEntry, CHANGE
-from django.contrib.contenttypes.models import ContentType
-from .models import Producto, Carrito, CarritoProducto, Categoria, Pedido, PedidoProducto
-from .forms import RegistroForm
+import io
+
 import mercadopago
 from django.conf import settings
+from django.contrib.admin.models import CHANGE, LogEntry
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
-import io
-from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer, Table,
+                                TableStyle)
+
+from .forms import RegistroForm
+from .models import (Carrito, CarritoProducto, Categoria, Pedido,
+                     PedidoProducto, Producto)
+
+
+# ======================================================
+# Vistas de cuenta de usuario
+# - Mi cuenta, ver datos, historial de compras
+# ======================================================
+@login_required
+def mi_cuenta(request):
+    return render(request, 'productos/mi_cuenta.html')
+
+
+@login_required
+def ver_datos_usuario(request):
+    return render(request, 'productos/ver_datos_usuario.html', {'user': request.user})
+
+
+@login_required
+def historial_compras(request):
+    pedidos = request.user.pedido_set.order_by('-fecha').all()
+    return render(request, 'productos/historial_compras.html', {'pedidos': pedidos})
+
+
+
 
 
 # ======================================================
@@ -154,6 +181,16 @@ def checkout(request):
     return render(request, 'productos/checkout.html', {'carrito': carrito, 'total': total})
 
 
+import io
+
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils import timezone
+from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 # ======================================================
 # Vista de pago aprobado / checkout exitoso
 # - Crea Pedido y PedidoProducto
@@ -161,17 +198,11 @@ def checkout(request):
 # - Genera PDF de factura
 # - Muestra la página de pago aprobado
 # ======================================================
-from reportlab.platypus import Paragraph, Spacer, Table, TableStyle, SimpleDocTemplate
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.enums import TA_LEFT
-import io
-from django.utils import timezone
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import render
+from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer, Table,
+                                TableStyle)
+
 from .models import Carrito, Pedido, PedidoProducto
+
 
 @login_required
 def pago_aprobado(request):
@@ -267,3 +298,46 @@ def pago_aprobado(request):
 
     # Si es GET (cuando llega desde Mercado Pago) solo mostramos el template
     return render(request, "productos/pago_aprobado.html", {'carrito': carrito})
+
+
+# ======================================================
+# Vistas de autenticación
+# - Registro, login y logout
+# ======================================================
+def registro(request):
+    if request.method == "POST":
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            usuario = form.save()
+            login(request, usuario)
+            return redirect('lista_productos')
+    else:
+        form = RegistroForm()
+    
+    return render(request, 'productos/registro.html', {'form': form})
+
+
+def login_usuario(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            usuario = form.get_user()
+            login(request, usuario)
+            return redirect('lista_productos')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'productos/login.html', {'form': form})
+
+
+@login_required
+def logout_usuario(request):
+    logout(request)
+    return redirect('login_usuario')
+
+
+
+@login_required
+def logout_usuario(request):
+    logout(request)
+    return redirect('login_usuario')
+
