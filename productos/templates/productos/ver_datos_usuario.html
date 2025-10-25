@@ -1,0 +1,44 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+<!-- CSS específico para la sección de ver datos del usuario -->
+<link rel="stylesheet" href="{% static 'css/ver_datos_usuario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="editar-container">
+
+    <div class="cards-wrapper">
+        <!-- Card que muestra los datos del usuario -->
+        <div class="editar-card card-pequena">
+            <h2 class="editar-title">Datos del usuario</h2>
+            <div class="editar-form">
+                <div class="form-group">
+                    <!-- Campos solo lectura -->
+                    <label>Usuario</label>
+                    <input type="text" value="{{ user.username }}" readonly>
+
+                    <label>Nombre</label>
+                    <input type="text" value="{{ user.first_name }}" readonly>
+
+                    <label>Apellido</label>
+                    <input type="text" value="{{ user.last_name }}" readonly>
+
+                    <label>Correo electrónico</label>
+                    <input type="email" value="{{ user.email }}" readonly>
+
+                    <label>Teléfono</label>
+                    <input type="text" value="{{ user.telefono }}" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón para volver a "Mi Cuenta" -->
+    <div class="button-group">
+        <a href="{% url 'mi_cuenta' %}" class="btn-cancel">Volver</a>
+    </div>
+
+</div>
+{% endblock %}

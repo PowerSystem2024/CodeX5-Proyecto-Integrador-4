@@ -1,0 +1,70 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <h2 class="login-title">Login</h2>
+
+        <!-- ================= MENSAJES GENERALES ================= -->
+        {% if messages %}
+            <div class="login-messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- ================= FORMULARIO LOGIN ================= -->
+        <form method="post" class="login-form">
+            {% csrf_token %}
+
+            <!-- Mostrar errores generales del formulario (correo o contraseña incorrecta) -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Campo de usuario -->
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.username.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Campo de contraseña -->
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+
+        <!-- ================= ENLACE A REGISTRO ================= -->
+        <p class="login-footer">
+            ¿No tenés cuenta? <a href="{% url 'registro' %}">Registrarse</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

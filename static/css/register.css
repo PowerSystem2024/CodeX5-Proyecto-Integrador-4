@@ -1,0 +1,137 @@
+/* ================= CONTENEDOR PRINCIPAL ================= */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    background: #f5f7fa;
+    padding: 1rem;
+}
+
+/* ================= CARD ================= */
+.register-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease forwards;
+}
+
+/* ================= TÍTULO ================= */
+.register-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+/* ================= FORMULARIO ================= */
+.register-form .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 1.5rem;
+}
+
+/* Campos que ocupan las dos columnas */
+.register-form .form-group.full-width {
+    grid-column: 1 / span 2;
+}
+
+/* Grupo de inputs */
+.register-form .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Inputs */
+.register-form input {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.register-form input:focus {
+    border-color: #0077cc;
+    box-shadow: 0 0 6px rgba(0,119,204,0.3);
+    outline: none;
+}
+
+/* Mensajes de error */
+.form-error {
+    color: #ff4d4f;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* ================= BOTÓN REGISTRARSE ================= */
+.btn-register {
+    grid-column: 1 / span 2;
+    margin: 1rem auto 0 auto;
+    background: #0077cc;
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: block;
+    width: fit-content;
+    text-align: center;
+}
+
+.btn-register:hover {
+    background: #005fa3;
+    transform: scale(1.05);
+}
+
+/* ================= FOOTER ================= */
+.register-footer {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+    color: #555;
+    text-align: center;
+}
+
+.register-footer a {
+    color: #0077cc;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ================= ANIMACIÓN ================= */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= AJUSTES ESPECÍFICOS DEL GRID ================= */
+.register-form .form-grid .form-group:nth-child(1) { grid-column: 1; } /* first_name */
+.register-form .form-grid .form-group:nth-child(2) { grid-column: 2; } /* last_name */
+.register-form .form-grid .form-group:nth-child(3) { grid-column: 1 / span 2; } /* email */
+.register-form .form-grid .form-group:nth-child(4) { grid-column: 1; } /* username */
+.register-form .form-grid .form-group:nth-child(5) { grid-column: 2; } /* telefono */
+.register-form .form-grid .form-group:nth-child(6) { grid-column: 1; } /* password1 */
+.register-form .form-grid .form-group:nth-child(7) { grid-column: 2; } /* password2 */
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .register-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-register {
+        width: 100%;
+        text-align: center;
+    }
+}
