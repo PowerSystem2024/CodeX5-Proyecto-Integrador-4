@@ -2,10 +2,12 @@
 # Imports necesarios para vistas y utilidades de Django
 # ======================================================
 import io
+import random
+import time
 
 import mercadopago
 from django.conf import settings
-from django.contrib.admin.models import CHANGE, LogEntry
+from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -14,15 +16,34 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
 from reportlab.lib import colors
+from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer, Table,
-                                TableStyle)
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from .forms import RegistroForm
-from .models import (Carrito, CarritoProducto, Categoria, Pedido,
-                     PedidoProducto, Producto)
+from .models import Producto, Carrito, CarritoProducto, Categoria, Pedido, PedidoProducto
+
+
+# ======================================================
+# Función auxiliar para registrar cambios en el admin
+# ======================================================
+def registrar_cambio_admin(user, objeto, descripcion="Cambio realizado desde la vista"):
+    """
+    Permite crear un registro de cambio en el admin de Django
+    para cualquier objeto, útil para auditoría o seguimiento.
+    """
+    content_type = ContentType.objects.get_for_model(objeto)
+    LogEntry.objects.log_action(
+        user_id=user.id,
+        content_type_id=content_type.id,
+        object_id=objeto.id,
+        object_repr=str(objeto),
+        action_flag=CHANGE,
+        change_message=descripcion
+    )
 
 
 # ======================================================
@@ -43,9 +64,6 @@ def ver_datos_usuario(request):
 def historial_compras(request):
     pedidos = request.user.pedido_set.order_by('-fecha').all()
     return render(request, 'productos/historial_compras.html', {'pedidos': pedidos})
-
-
-
 
 
 # ======================================================
@@ -74,6 +92,7 @@ def lista_productos(request):
         productos = productos.filter(categoria_id=categoria_id)
 
     return render(request, 'productos/lista.html', {'productos': productos, 'categorias': categorias})
+
 
 # ======================================================
 # Vistas de carrito de compras
@@ -150,8 +169,6 @@ def checkout(request):
                 "currency_id": "ARS",
             })
 
-        import random
-        import time
         external_reference = f"ORDER_{int(time.time())}_{random.randint(1000,9999)}"
         
         preference_data = {
@@ -181,16 +198,6 @@ def checkout(request):
     return render(request, 'productos/checkout.html', {'carrito': carrito, 'total': total})
 
 
-import io
-
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.utils import timezone
-from reportlab.lib import colors
-from reportlab.lib.enums import TA_LEFT
-from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 # ======================================================
 # Vista de pago aprobado / checkout exitoso
 # - Crea Pedido y PedidoProducto
@@ -198,12 +205,6 @@ from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 # - Genera PDF de factura
 # - Muestra la página de pago aprobado
 # ======================================================
-from reportlab.platypus import (Paragraph, SimpleDocTemplate, Spacer, Table,
-                                TableStyle)
-
-from .models import Carrito, Pedido, PedidoProducto
-
-
 @login_required
 def pago_aprobado(request):
     carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
@@ -335,9 +336,10 @@ def logout_usuario(request):
     return redirect('login_usuario')
 
 
-
+# ======================================================
+# Vista de historial de pedidos del usuario
+# ======================================================
 @login_required
-def logout_usuario(request):
-    logout(request)
-    return redirect('login_usuario')
-
+def historial_pedidos(request):
+    pedidos = Pedido.objects.filter(usuario=request.user).order_by('-fecha')
+    return render(request, 'productos/historial.html', {'pedidos': pedidos})
