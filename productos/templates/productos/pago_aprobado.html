@@ -40,6 +40,7 @@ const linkPDF = document.getElementById('link-pdf');
 
 btn.addEventListener('click', async function() {
     btn.disabled = true;  // Evitar múltiples clics
+    btn.textContent = 'Procesando...';
 
     try {
         const response = await fetch("{% url 'pago_aprobado' %}", {
@@ -57,12 +58,24 @@ btn.addEventListener('click', async function() {
             linkPDF.href = data.pdf_url;
             linkPDF.style.display = 'inline-block';
             btn.style.display = 'none';
+        } else if (data.status === 'error') {
+            // Error: mostrar mensaje y opcionalmente redirigir
+            alert(data.message || 'Error al procesar el pedido');
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Confirmar Pago y Generar Pedido';
+            }
         } else {
-            btn.disabled = false; // Reactivar botón si hay error
+            btn.disabled = false;
+            btn.textContent = 'Confirmar Pago y Generar Pedido';
         }
     } catch (err) {
         console.error("Error en fetch:", err);
+        alert('Error de conexión. Por favor, intenta nuevamente.');
         btn.disabled = false;
+        btn.textContent = 'Confirmar Pago y Generar Pedido';
     }
 });
 </script>

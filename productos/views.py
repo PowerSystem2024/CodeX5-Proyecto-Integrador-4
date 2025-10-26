@@ -219,13 +219,18 @@ def pago_aprobado(request):
     direccion = request.session.get('direccion_envio', '')
 
     print("Accediendo a pago_aprobado, método:", request.method)  # DEBUG
+    print(f"Usuario: {request.user.username}, Carrito ID: {carrito.id}, Items: {carrito.carritoproducto_set.count()}")  # DEBUG
 
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         print("POST recibido via AJAX")  # DEBUG
 
         if not carrito.carritoproducto_set.exists():
-            print("Carrito vacío")  # DEBUG
-            return JsonResponse({'status': 'error', 'message': 'No hay productos en el carrito.'})
+            print("Carrito vacío - redirigiendo a vista de carrito")  # DEBUG
+            return JsonResponse({
+                'status': 'error', 
+                'message': 'No hay productos en el carrito. Por favor, agrega productos antes de confirmar el pago.',
+                'redirect': '/carrito/'
+            })
 
         try:
             # Crear el pedido
