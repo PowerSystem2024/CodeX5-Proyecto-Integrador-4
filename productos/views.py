@@ -98,6 +98,7 @@ def lista_productos(request):
 # Vistas de carrito de compras
 # - Agregar, ver, eliminar producto y vaciar carrito
 # ======================================================
+
 @login_required
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
@@ -105,14 +106,21 @@ def agregar_al_carrito(request, producto_id):
         return redirect('lista_productos')
 
     carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
-    carrito_producto, created = CarritoProducto.objects.get_or_create(carrito=carrito, producto=producto)
+
+    # Agrega producto sin borrar los anteriores
+    carritoproducto, created = CarritoProducto.objects.get_or_create(
+        carrito=carrito,
+        producto=producto,
+        defaults={'cantidad': 1}
+    )
 
     if not created:
-        if carrito_producto.cantidad < producto.stock:
-            carrito_producto.cantidad += 1
-            carrito_producto.save()
-    
+        if carritoproducto.cantidad < producto.stock:
+            carritoproducto.cantidad += 1
+            carritoproducto.save()
+
     return redirect(request.META.get('HTTP_REFERER', 'lista_productos'))
+
 
 
 @login_required
