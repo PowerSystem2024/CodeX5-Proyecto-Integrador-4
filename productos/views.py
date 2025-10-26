@@ -206,15 +206,16 @@ def checkout(request):
 # - Muestra la página de pago aprobado
 # ======================================================
 @login_required
+@login_required
 def pago_aprobado(request):
     carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     direccion = request.session.get('direccion_envio', '')
 
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        try:
-            if not carrito.carritoproducto_set.exists():
-                return JsonResponse({'status': 'error', 'message': 'No hay productos en el carrito.'})
+        if not carrito.carritoproducto_set.exists():
+            return JsonResponse({'status': 'error', 'message': 'No hay productos en el carrito.'})
 
+        try:
             # Crear el pedido
             pedido = Pedido.objects.create(
                 usuario=request.user,
@@ -231,16 +232,12 @@ def pago_aprobado(request):
                     cantidad=item.cantidad,
                     precio_unitario=item.producto.precio_con_descuento
                 )
-                producto = item.producto
-                producto.stock -= item.cantidad
-                if producto.stock < 0:
-                    producto.stock = 0
-                producto.save()
+                item.producto.stock = max(item.producto.stock - item.cantidad, 0)
+                item.producto.save()
 
             # Vaciar carrito y limpiar sesión
             carrito.carritoproducto_set.all().delete()
-            if 'direccion_envio' in request.session:
-                del request.session['direccion_envio']
+            request.session.pop('direccion_envio', None)
 
             # Generar PDF de factura
             buffer = io.BytesIO()
@@ -248,8 +245,7 @@ def pago_aprobado(request):
             elements = []
             styles = getSampleStyleSheet()
 
-            fecha_local = timezone.localtime(pedido.fecha)
-            fecha_str = fecha_local.strftime("%d/%m/%Y %H:%M")
+            fecha_str = timezone.localtime(pedido.fecha).strftime("%d/%m/%Y %H:%M")
 
             elements.append(Paragraph(f"Factura - Pedido #{pedido.numero_pedido_formateado()}", styles['Title']))
             elements.append(Spacer(1, 12))
@@ -259,45 +255,44 @@ def pago_aprobado(request):
             elements.append(Paragraph(f"<b>Fecha:</b> {fecha_str}", styles['Normal']))
             elements.append(Spacer(1, 12))
 
-            # Estilo para las celdas de la tabla con wrap
             cell_style = ParagraphStyle(name='cell_style', fontName='Helvetica', fontSize=10, leading=12, alignment=TA_LEFT)
 
-            # Datos de la tabla
             data = [['Producto', 'Cantidad', 'Precio Unitario', 'Subtotal']]
             for item in pedido.pedidoproducto_set.all():
                 subtotal = item.cantidad * item.precio_unitario
-                producto_parrafo = Paragraph(item.producto.nombre, cell_style)  # Wrap para nombres largos
+                producto_parrafo = Paragraph(item.producto.nombre, cell_style)
                 data.append([producto_parrafo, str(item.cantidad), f"${item.precio_unitario:.2f}", f"${subtotal:.2f}"])
             data.append(['', '', 'Total:', f"${pedido.total:.2f}"])
 
-            # Crear la tabla
             table = Table(data, colWidths=[200, 60, 100, 100], repeatRows=1)
             table.setStyle(TableStyle([
                 ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
-                ('TEXTCOLOR',(0,0),(-1,0),colors.black),
                 ('ALIGN',(1,1),(-1,-1),'CENTER'),
                 ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
                 ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-                ('BOTTOMPADDING', (0,0), (-1,0), 12),
                 ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
                 ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
             ]))
             elements.append(table)
 
-            # Construir el PDF
             doc.build(elements)
             buffer.seek(0)
 
             pdf_filename = f"pedido_{pedido.numero_pedido_formateado()}.pdf"
-            with open(f"static/media/pedidos/{pdf_filename}", "wb") as f:
+            pdf_path = f"static/media/pedidos/{pdf_filename}"
+            with open(pdf_path, "wb") as f:
                 f.write(buffer.getbuffer())
 
-            return JsonResponse({'status': 'ok', 'message': 'Pedido generado correctamente.', 'pdf_url': f"/static/media/pedidos/{pdf_filename}"})
+            # Devolver JSON con la URL del PDF
+            return JsonResponse({
+                'status': 'ok',
+                'message': 'Pedido generado correctamente.',
+                'pdf_url': f"/{pdf_path}"
+            })
 
         except Exception as e:
-            return JsonResponse({'status': 'error', 'message': 'Ocurrió un error al generar el pedido.'})
+            return JsonResponse({'status': 'error', 'message': f'Ocurrió un error al generar el pedido: {str(e)}'})
 
-    # Si es GET (cuando llega desde Mercado Pago) solo mostramos el template
     return render(request, "productos/pago_aprobado.html", {'carrito': carrito})
 
 
