@@ -206,13 +206,17 @@ def checkout(request):
 # - Muestra la página de pago aprobado
 # ======================================================
 @login_required
-@login_required
 def pago_aprobado(request):
     carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     direccion = request.session.get('direccion_envio', '')
 
+    print("Accediendo a pago_aprobado, método:", request.method)  # DEBUG
+
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        print("POST recibido via AJAX")  # DEBUG
+
         if not carrito.carritoproducto_set.exists():
+            print("Carrito vacío")  # DEBUG
             return JsonResponse({'status': 'error', 'message': 'No hay productos en el carrito.'})
 
         try:
@@ -223,6 +227,7 @@ def pago_aprobado(request):
                 pagado=True,
                 direccion_envio=direccion
             )
+            print(f"Pedido creado: {pedido.id}")  # DEBUG
 
             # Crear los items del pedido y actualizar stock
             for item in carrito.carritoproducto_set.all():
@@ -234,10 +239,12 @@ def pago_aprobado(request):
                 )
                 item.producto.stock = max(item.producto.stock - item.cantidad, 0)
                 item.producto.save()
+            print("Items del pedido creados y stock actualizado")  # DEBUG
 
             # Vaciar carrito y limpiar sesión
             carrito.carritoproducto_set.all().delete()
             request.session.pop('direccion_envio', None)
+            print("Carrito vaciado y sesión limpia")  # DEBUG
 
             # Generar PDF de factura
             buffer = io.BytesIO()
@@ -282,6 +289,7 @@ def pago_aprobado(request):
             pdf_path = f"static/media/pedidos/{pdf_filename}"
             with open(pdf_path, "wb") as f:
                 f.write(buffer.getbuffer())
+            print(f"PDF generado: {pdf_path}")  # DEBUG
 
             # Devolver JSON con la URL del PDF
             return JsonResponse({
@@ -291,9 +299,12 @@ def pago_aprobado(request):
             })
 
         except Exception as e:
+            print("Error al generar pedido:", str(e))  # DEBUG
             return JsonResponse({'status': 'error', 'message': f'Ocurrió un error al generar el pedido: {str(e)}'})
 
+    print("No es POST o no es AJAX")  # DEBUG
     return render(request, "productos/pago_aprobado.html", {'carrito': carrito})
+
 
 
 # ======================================================
