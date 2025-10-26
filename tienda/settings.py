@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-a*rrx*8n6q6l=v%y4ze45
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Lista de dominios permitidos para acceder al proyecto
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'proyectoecommerce.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'codex5-proyecto-integrador-4.onrender.com']
 
 
 # === APLICACIONES INSTALADAS ===
@@ -72,11 +72,18 @@ TEMPLATES = [
 ]
 
 
+
 # === BASE DE DATOS ===
-# Usa dj_database_url para conectarse a PostgreSQL (producción) o SQLite (desarrollo por defecto)
-DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
-}
+# Conexión a PostgreSQL en producción o SQLite en desarrollo
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ['DATABASE_URL'], conn_max_age=600)
+    }
+else:
+    # Local: sqlite
+    DATABASES = {
+        'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
+    }
 
 
 # === VALIDACIÓN DE CONTRASEÑAS ===
@@ -122,6 +129,5 @@ AUTH_USER_MODEL = 'productos.Usuario'  # Usa un modelo de usuario personalizado 
 
 
 # === CONFIGURACIÓN DE MERCADO PAGO ===
-# Tokens de prueba (sandbox). En producción deben ir en variables de entorno.
-MP_ACCESS_TOKEN = os.environ.get('MP_ACCESS_TOKEN', 'APP_USR-659340762835775-091415-d107d619602a205f2ceef439eb3bbfb4-2669198849')
-MP_PUBLIC_KEY = os.environ.get('MP_PUBLIC_KEY', 'APP_USR-f00f52bd-6145-4161-8a5f-21feda075d81')
+MP_ACCESS_TOKEN = os.environ['MP_ACCESS_TOKEN']
+MP_PUBLIC_KEY = os.environ['MP_PUBLIC_KEY']
