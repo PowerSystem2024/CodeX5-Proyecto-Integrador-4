@@ -12,10 +12,10 @@
     <!-- Botón para generar el pedido -->
     <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
 
-    <!-- Link al PDF, oculto hasta que el pedido se genere -->
-    <a id="link-pdf" href="#" target="_blank" style="display:none; margin-top:0.5rem; font-weight:bold; color:#1d4ed8;">
-        📄 Descargar PDF del pedido
-    </a>
+    <!-- Mensaje de éxito (oculto hasta que el pedido se genere) -->
+    <p id="mensaje-exito" style="display:none; margin-top:1rem; color:#059669; font-weight:bold;">
+        ✅ ¡Pedido generado correctamente! El PDF se descargó automáticamente.
+    </p>
 </div>
 
 <a class="volver-tienda" href="{% url 'lista_productos' %}">Volver a la tienda</a>
@@ -36,7 +36,7 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 const btn = document.getElementById('confirmar-pago-btn');
-const linkPDF = document.getElementById('link-pdf');
+const mensajeExito = document.getElementById('mensaje-exito');
 
 btn.addEventListener('click', async function() {
     btn.disabled = true;  // Evitar múltiples clics
@@ -51,25 +51,51 @@ btn.addEventListener('click', async function() {
             }
         });
 
-        const data = await response.json();
-
-        if (data.status === 'ok' && data.pdf_url) {
-            // Pedido generado: mostrar PDF y ocultar botón
-            linkPDF.href = data.pdf_url;
-            linkPDF.style.display = 'inline-block';
+        // Verificar si la respuesta es un PDF (descarga directa)
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/pdf')) {
+            // Es un PDF - descargarlo automáticamente
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            // Extraer el nombre del archivo del header Content-Disposition si está disponible
+            const disposition = response.headers.get('content-disposition');
+            let filename = 'pedido.pdf';
+            if (disposition && disposition.includes('filename=')) {
+                const filenameMatch = disposition.match(/filename="?(.+?)"?$/);
+                if (filenameMatch) filename = filenameMatch[1];
+            }
+            
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            // Mostrar mensaje de éxito y ocultar botón
+            mensajeExito.style.display = 'block';
             btn.style.display = 'none';
-        } else if (data.status === 'error') {
-            // Error: mostrar mensaje y opcionalmente redirigir
-            alert(data.message || 'Error al procesar el pedido');
-            if (data.redirect) {
-                window.location.href = data.redirect;
+            
+        } else {
+            // Es JSON (probablemente un error)
+            const data = await response.json();
+            
+            if (data.status === 'error') {
+                alert(data.message || 'Error al procesar el pedido');
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Confirmar Pago y Generar Pedido';
+                }
             } else {
                 btn.disabled = false;
                 btn.textContent = 'Confirmar Pago y Generar Pedido';
             }
-        } else {
-            btn.disabled = false;
-            btn.textContent = 'Confirmar Pago y Generar Pedido';
         }
     } catch (err) {
         console.error("Error en fetch:", err);

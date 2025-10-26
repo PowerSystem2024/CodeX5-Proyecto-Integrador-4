@@ -2,6 +2,7 @@
 # Imports necesarios para vistas y utilidades de Django
 # ======================================================
 import io
+import os
 import random
 import time
 
@@ -298,18 +299,17 @@ def pago_aprobado(request):
             doc.build(elements)
             buffer.seek(0)
 
-            pdf_filename = f"pedido_{pedido.numero_pedido_formateado()}.pdf"
-            pdf_path = f"static/media/pedidos/{pdf_filename}"
-            with open(pdf_path, "wb") as f:
-                f.write(buffer.getbuffer())
-            print(f"PDF generado: {pdf_path}")  # DEBUG
+            # Vaciar carrito y limpiar sesión
+            carrito.carritoproducto_set.all().delete()
+            request.session.pop('direccion_envio', None)
+            print("Carrito vaciado y sesión limpia")  # DEBUG
 
-            # Devolver JSON con la URL del PDF
-            return JsonResponse({
-                'status': 'ok',
-                'message': 'Pedido generado correctamente.',
-                'pdf_url': f"/{pdf_path}"
-            })
+            # Devolver el PDF directamente como respuesta HTTP
+            pdf_filename = f"pedido_{pedido.numero_pedido_formateado()}.pdf"
+            response = HttpResponse(buffer.getvalue(), content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{pdf_filename}"'
+            print(f"PDF generado en memoria: {pdf_filename}")  # DEBUG
+            return response
 
         except Exception as e:
             print("Error al generar pedido:", str(e))  # DEBUG
