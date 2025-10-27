@@ -15,16 +15,14 @@
         <!-- Galería de imágenes -->
         <div class="galeria">
             <img id="imagen-principal" class="imagen-principal" 
-                 src="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}" 
+                 src="{% static 'img_productos/' %}{{ producto.id }}.1.jpg" 
                  alt="{{ producto.nombre }}">
 
             <div class="miniaturas">
-                {% if producto.imagen %}
-                <img src="{{ producto.imagen.url }}" alt="Principal" class="miniatura active" onclick="cambiarImagen(this)">
-                {% endif %}
-                <!-- Imágenes adicionales desde carpeta media -->
-                <img src="{{ MEDIA_URL }}img_productos/{{ producto.id }}.2.jpg" alt="Imagen 2" class="miniatura" onclick="cambiarImagen(this)" onerror="this.style.display='none'">
-                <img src="{{ MEDIA_URL }}img_productos/{{ producto.id }}.3.jpg" alt="Imagen 3" class="miniatura" onclick="cambiarImagen(this)" onerror="this.style.display='none'">
+                <img src="{% static 'img_productos/' %}{{ producto.id }}.1.jpg" alt="Principal" class="miniatura active" onclick="cambiarImagen(this)">
+                <!-- Imágenes adicionales desde carpeta static -->
+                <img src="{% static 'img_productos/' %}{{ producto.id }}.2.jpg" alt="Imagen 2" class="miniatura" onclick="cambiarImagen(this)" onerror="this.style.display='none'">
+                <img src="{% static 'img_productos/' %}{{ producto.id }}.3.jpg" alt="Imagen 3" class="miniatura" onclick="cambiarImagen(this)" onerror="this.style.display='none'">
             </div>
         </div>
 
