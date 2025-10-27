@@ -1,0 +1,183 @@
+/* ================= CONTENEDOR PRINCIPAL ================= */
+.editar-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 70vh;
+    padding: 2rem 1rem;
+    background: #f5f7fa;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
+}
+
+/* ================= ANIMACIÓN GENERAL ================= */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= WRAPPER DE TARJETAS ================= */
+.cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 1.5rem;
+}
+
+/* ================= TARJETA ================= */
+.editar-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.editar-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* Variante pequeña */
+.card-pequena {
+    max-width: 600px;
+}
+
+/* ================= TÍTULO DE LA TARJETA ================= */
+.editar-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+/* ================= FORMULARIO ================= */
+.editar-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #555;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: #f9fafb;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    background: #ffffff;
+}
+
+/* Campos readonly */
+.form-group input[readonly] {
+    background: #e5e7eb;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+.form-group input[readonly]:focus {
+    border-color: #d1d5db;
+    box-shadow: none;
+}
+
+/* ================= GRUPO DE BOTONES ================= */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Botón cancelar / volver */
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    background: #6b7280;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-cancel:hover {
+    background: #4b5563;
+    transform: translateY(-2px);
+}
+
+/* Botón guardar */
+.btn-guardar {
+    padding: 0.75rem 1.5rem;
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-guardar:hover {
+    background: #0284c7;
+    transform: translateY(-2px);
+}
+
+.btn-guardar:active {
+    transform: translateY(0);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+    .editar-container {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .editar-card {
+        padding: 1.5rem;
+    }
+
+    .editar-title {
+        font-size: 1.3rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    .btn-cancel,
+    .btn-guardar {
+        width: 100%;
+    }
+}
