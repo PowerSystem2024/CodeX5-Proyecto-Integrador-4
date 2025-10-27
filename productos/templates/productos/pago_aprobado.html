@@ -1,0 +1,108 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/pago_aprobado.css' %}">
+
+<div class="pago-card">
+    <h1>Pago Aprobado</h1>
+
+    <p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
+
+    <!-- Botón para generar el pedido -->
+    <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
+
+    <!-- Mensaje de éxito (oculto hasta que el pedido se genere) -->
+    <p id="mensaje-exito" style="display:none; margin-top:1rem; color:#059669; font-weight:bold;">
+        ✅ ¡Pedido generado correctamente! El PDF se descargó automáticamente.
+    </p>
+</div>
+
+<a class="volver-tienda" href="{% url 'lista_productos' %}">Volver a la tienda</a>
+
+<script>
+// Obtener CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        document.cookie.split(';').forEach(cookie => {
+            if (cookie.trim().startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.trim().substring(name.length + 1));
+            }
+        });
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+const btn = document.getElementById('confirmar-pago-btn');
+const mensajeExito = document.getElementById('mensaje-exito');
+
+btn.addEventListener('click', async function() {
+    btn.disabled = true;  // Evitar múltiples clics
+    btn.textContent = 'Procesando...';
+
+    try {
+        const response = await fetch("{% url 'pago_aprobado' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        // Verificar si la respuesta es un PDF (descarga directa)
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/pdf')) {
+            // Es un PDF - descargarlo automáticamente
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            // Extraer el nombre del archivo del header Content-Disposition si está disponible
+            const disposition = response.headers.get('content-disposition');
+            let filename = 'pedido.pdf';
+            if (disposition && disposition.includes('filename=')) {
+                const filenameMatch = disposition.match(/filename="?(.+?)"?$/);
+                if (filenameMatch) filename = filenameMatch[1];
+            }
+            
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            // Mostrar mensaje de éxito y ocultar botón
+            mensajeExito.style.display = 'block';
+            btn.style.display = 'none';
+            
+        } else {
+            // Es JSON (probablemente un error)
+            const data = await response.json();
+            
+            if (data.status === 'error') {
+                alert(data.message || 'Error al procesar el pedido');
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Confirmar Pago y Generar Pedido';
+                }
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Confirmar Pago y Generar Pedido';
+            }
+        }
+    } catch (err) {
+        console.error("Error en fetch:", err);
+        alert('Error de conexión. Por favor, intenta nuevamente.');
+        btn.disabled = false;
+        btn.textContent = 'Confirmar Pago y Generar Pedido';
+    }
+});
+</script>
+{% endblock %}

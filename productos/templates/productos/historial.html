@@ -1,0 +1,38 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+
+<!-- ================= TÍTULO ================= -->
+<h1>Historial de pedidos</h1>
+
+<!-- ================= LISTADO DE PEDIDOS ================= -->
+{% if pedidos %}
+    <!-- Si hay pedidos, se muestra una lista -->
+    <ul>
+    {% for pedido in pedidos %}
+        <li>
+            <!-- Información general del pedido -->
+            Pedido #{{ pedido.id }} - {{ pedido.fecha|date:"d/m/Y H:i" }} - Total: ${{ pedido.total }} - Dirección: {{ pedido.direccion_envio }}
+            
+            <!-- Productos incluidos en el pedido -->
+            <ul>
+                {% for item in pedido.pedidoproducto_set.all %}
+                    <li>{{ item.producto.nombre }} x {{ item.cantidad }} = ${{ item.subtotal }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <!-- FEEDBACK: el usuario puede ver claramente todos sus pedidos y los productos de cada uno -->
+{% else %}
+    <!-- ================= MENSAJE SI NO HAY PEDIDOS ================= -->
+    <p>No tienes pedidos aún.</p>
+    <!-- FEEDBACK: informa al usuario que todavía no realizó compras -->
+{% endif %}
+
+<!-- ================= BOTÓN VOLVER ================= -->
+<a href="{% url 'lista_productos' %}">Volver a la tienda</a>
+<!-- FEEDBACK: permite al usuario regresar fácilmente a la tienda -->
+
+{% endblock %}

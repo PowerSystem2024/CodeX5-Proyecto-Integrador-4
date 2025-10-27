@@ -1,0 +1,166 @@
+/* ============================ */
+/*        BLOQUE PRINCIPAL      */
+/* ============================ */
+/* Card principal del checkout y contenedor */
+.checkout-card {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+/* Títulos dentro de la card */
+.checkout-card h1 {
+    margin-bottom: 1rem;
+}
+
+/* ============================ */
+/*        TABLA DE PRODUCTOS    */
+/* ============================ */
+.carrito-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.carrito-tabla th,
+.carrito-tabla td {
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.carrito-tabla th {
+    font-weight: 600;
+    background-color: #f8fafc;
+    color: #111;
+}
+
+.producto-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+/* Hover y animación por fila */
+.carrito-tabla tbody tr {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+.carrito-tabla tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.carrito-tabla tbody tr:nth-child(2) { animation-delay: 0.2s; }
+.carrito-tabla tbody tr:nth-child(3) { animation-delay: 0.3s; }
+.carrito-tabla tbody tr:nth-child(4) { animation-delay: 0.4s; }
+.carrito-tabla tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+.carrito-tabla tbody tr:hover {
+    background-color: #f0f2f5;
+    transform: scale(1.02);
+}
+
+/* ============================ */
+/*         TOTAL Y BOTONES      */
+/* ============================ */
+.total-botones-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s 0.2s forwards;
+}
+
+.total-botones-container p {
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+/* Contenedor de botones (finalizar, regresar) */
+.form-botones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.botones-carrito a,
+.btn-finalizar {
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    background-color: #0ea5e9;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.botones-carrito a:hover,
+.btn-finalizar:hover {
+    background-color: #10638a;
+    transform: scale(1.05);
+}
+
+/* ============================ */
+/*       FORMULARIO DIRECCIÓN    */
+/* ============================ */
+.checkout-form-container {
+    max-width: 1000px;
+    margin: 1.5rem auto 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.checkout-form-container input {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 300px;
+    font-size: 1rem;
+    margin: 0 auto;
+    display: block;
+}
+
+/* ============================ */
+/*          ANIMACIONES          */
+/* ============================ */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================ */
+/*           RESPONSIVE         */
+/* ============================ */
+@media (max-width: 600px) {
+    .carrito-tabla th,
+    .carrito-tabla td {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .producto-img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .form-botones {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

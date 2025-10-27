@@ -1,0 +1,119 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- ======================================================
+     CSS específico para checkout
+====================================================== -->
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+
+{% if carrito.carritoproducto_set.exists %}
+<!-- ======================================================
+     TARJETA DE CHECKOUT
+     Muestra los productos del carrito en una tabla
+     Con imagen, nombre, precio, cantidad y subtotal
+====================================================== -->
+<div class="checkout-card">
+    <h1>Checkout</h1>
+    <table class="carrito-tabla">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in carrito.carritoproducto_set.all %}
+            <tr>
+                <td>
+                    {% if item.producto.imagen %}
+                        <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="producto-img">
+                    {% else %}
+                        <img src="https://via.placeholder.com/40" alt="Sin imagen" class="producto-img">
+                    {% endif %}
+                </td>
+                <td>{{ item.producto.nombre }}</td>
+                <td>${{ item.producto.precio }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td><strong>${{ item.subtotal }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-botones-container">
+        <p>Total: ${{ total }}</p>
+    </div>
+</div>
+
+<!-- ======================================================
+     FORMULARIO DE CHECKOUT
+     Permite ingresar dirección y finalizar compra
+     Botón de volver al carrito y botón de finalizar
+====================================================== -->
+<div class="checkout-form-container">
+    <form id="checkout-form" method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <input type="text" name="direccion" id="direccion" placeholder="Dirección" required
+               style="max-width: 300px; margin: 0 auto; display: block;">
+
+        <div class="form-botones" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+            <a href="{% url 'ver_carrito' %}" class="btn-volver" 
+               style="height: 44px; display: flex; align-items: center;">Volver al carrito</a>
+            <button type="submit" class="btn-finalizar" style="height: 44px;">Finalizar Compra</button>
+        </div>
+    </form>
+</div>
+
+<!-- ======================================================
+     SCRIPT DE ENVÍO ASÍNCRONO
+     Usa fetch para enviar datos sin recargar
+     Feedback dinámico en caso de éxito o error
+====================================================== -->
+<script>
+const form = document.getElementById('checkout-form');
+
+form.addEventListener('submit', async function(e) {
+    e.preventDefault();  // Previene el envío normal
+
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        const url = await response.text();
+
+        if (url.startsWith('http')) {
+            // Redirige al usuario al link de pago y luego a la página de pago aprobado
+            window.open(url, '_blank');
+            window.location.href = "{% url 'pago_aprobado' %}";
+        } else {
+            // Feedback si no se pudo generar la preferencia de pago
+            alert('No se pudo generar la preferencia de pago. Intenta de nuevo.');
+        }
+
+    } catch (err) {
+        // Feedback si ocurre un error inesperado
+        console.error("Error en fetch:", err);
+        alert("Ocurrió un error inesperado al generar el link de pago.");
+    }
+});
+</script>
+
+{% else %}
+<!-- ======================================================
+     FEEDBACK SI EL CARRITO ESTÁ VACÍO
+     Se muestra mensaje y link para volver a la tienda
+====================================================== -->
+<p>No hay productos en el carrito.</p>
+<a href="{% url 'lista_productos' %}" class="botones-carrito">Volver a la tienda</a>
+{% endif %}
+
+{% endblock %}

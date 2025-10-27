@@ -1,0 +1,27 @@
+[
+    {
+        "model": "productos.categoria",
+        "pk": 1,
+        "fields": {"nombre": "Mouses"}
+    },
+    {
+        "model": "productos.categoria",
+        "pk": 2,
+        "fields": {"nombre": "Sillas Gamer"}
+    },
+    {
+        "model": "productos.categoria",
+        "pk": 3,
+        "fields": {"nombre": "Teclados"}
+    },
+    {
+        "model": "productos.categoria",
+        "pk": 4,
+        "fields": {"nombre": "Placas de Videos"}
+    },
+    {
+        "model": "productos.categoria",
+        "pk": 5,
+        "fields": {"nombre": "Monitores"}
+    }
+]
