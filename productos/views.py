@@ -194,7 +194,10 @@ def checkout(request):
         try:
             preference_response = sdk.preference().create(preference_data)
             preference = preference_response.get("response", {})
-            url = preference.get("sandbox_init_point")
+            
+            # Usar init_point (producción) si está disponible, sino sandbox_init_point
+            url = preference.get("init_point") or preference.get("sandbox_init_point")
+            
             if not url:
                 error_info = preference_response.get("cause", [])
                 return JsonResponse({'error': True, 'message': f'Error de MercadoPago: {error_info}'})
